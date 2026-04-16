@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - .:/opt/www
+    ports:
+      - "9501:9501"
+    environment:
+      - APP_ENV=dev
+      - SCAN_CACHEABLE=false
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    command: php bin/hyperf.php start
+    depends_on:
+      - mysql
+      - mailhog
+      - redis
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tecnofit
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
