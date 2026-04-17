@@ -65,9 +65,25 @@ Comentários sobre decisões tomadas 🔌
 
 ## Colunas extras:  email (nullable)
 
-Adicionei a coluna email na tabela `accounts` para poder enviar e-mails para os usuários, porque não obrigatoriamente o e-mail do PIX é o mesmo e-mail cadastrado na conta.
+Fiquei em dúvida com a frase no documento de: *"Após realizar o saque, deve ser enviado um email para o email do PIX, informando que o saque foi efetuado".* Se estamos debitando de Fulano enviando para ciclano através da chave e-mail, não seria um e-mail informando que foi recebido um PIX?
 
-Caso não tenha e-mail cadastrado (por erro na etapa de cadastro ou qualquer eventual bug), tomei a decisão de: prosseguir com o PIX para o usuário não ser afetado (e ficar puto no Reclame Aqui), não enviar o e-mail (uma vez que não tem e-mail cadastrado) e emitir um logger avisando sobre a falta de e-mail cadastrado.
+De qualquer maneira, para cumprir os requisitos, no e-mail chega o seguinte texto:
+
+```
+Comprovante de Saque Efetuado
+-----------------------------------
+Valor: R$ 10,00
+Data e Hora: 17/04/2026 05:19:38
+Método: PIX
+Enviado por: suporte@tecnofit.com.br
+Recebido por: teste@teste.com
+-----------------------------------
+Este é um e-mail automático de confirmação.
+```
+
+O **enviado por** vêm do Banco, do e-mail da conta que está sendo retirado o dinheiro e para isso, adicionei a coluna email na tabela `accounts` para poder informar quem enviou.
+
+Caso quem enviou não tenha e-mail cadastrado (por erro na etapa de cadastro ou qualquer eventual bug), tomei a decisão de: prosseguir com o PIX por uma questão de prioridade na importância das tarefas, enviar o e-mail informando que quem enviou não tem e-mail cadastrado e emitir um logger avisando sobre a falta de e-mail cadastrado :P
 
 
 ## Expansão Futura (Open/Closed Principle)

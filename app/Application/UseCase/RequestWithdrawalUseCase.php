@@ -32,6 +32,7 @@ class RequestWithdrawalUseCase
         $result = Db::transaction(function () use ($dto, &$jobData) {
             $strategy = $this->strategyFactory->make($dto->method);
             $account = $this->accountRepository->findByIdForUpdate($dto->accountId);
+            $recipientEmail = $dto->pixData['key'];
             
             if (!$account) {
                 throw new \Exception("Conta não encontrada", 404);
@@ -61,7 +62,8 @@ class RequestWithdrawalUseCase
                     'account_id' => $account->getId(),
                     'method' => $dto->method,
                     'amount' => $dto->amount,
-                    'email' => $account->getEmail()
+                    'recipientEmail' => $recipientEmail,      // Quem recebe
+                    'account_email' => $account->getEmail()  // Quem envia (vêm da tabela account)
                 ];
             }
 
@@ -78,7 +80,8 @@ class RequestWithdrawalUseCase
                 $jobData['account_id'],
                 $jobData['method'],
                 $jobData['amount'],
-                $jobData['email']
+                $jobData['recipientEmail'],
+                $jobData['account_email']
             );
             $this->queueDriver->push($job);
         }

@@ -33,6 +33,9 @@ class ProcessScheduledWithdrawalsUseCase
                     throw new \Exception("Conta não encontrada");
                 }
 
+                $pixData = $this->withdrawRepository->getPixDetails($withdraw->getId());
+                $recipientEmail = $pixData['key'] ?? $account->getEmail();
+
                 $account->deduct($withdraw->getAmount());
                 $withdraw->complete();
 
@@ -45,6 +48,7 @@ class ProcessScheduledWithdrawalsUseCase
                     $account->getId(),
                     $withdraw->getMethod(),
                     $withdraw->getAmount(),
+                    $recipientEmail,
                     $account->getEmail()
                 );
                 $this->queueDriver->push($job);
