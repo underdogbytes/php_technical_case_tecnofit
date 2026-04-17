@@ -8,32 +8,32 @@
 
 ## Passos para executar
 
-1. Configure o arquivo .env com base no .env.example
-
-2. Clone o repositório:
+1. Clone o repositório:
    ```bash
    git clone https://github.com/underdogbytes/php_technical_case_tecnofit.git
    cd php_technical_case_tecnofit
    ```
 
-3. Suba os containers com Docker Compose:
+2. Crie o arquivo .env no root baseado no .env.example
+
+3. Execute os comandos na ordem:
+
+   ```bash
+   docker-compose run --rm --entrypoint /bin/sh app -c "composer install"
+   ```
+
    ```bash
    docker-compose up -d
    ```
 
-4. Instale as dependências do PHP:
    ```bash
-   docker exec php_technical_case_tecnofit-app-1 composer install
+   docker-compose exec app php bin/hyperf.php migrate
    ```
 
-5. Execute as migrações do banco de dados:
-   ```bash
-   docker exec php_technical_case_tecnofit-app-1 php bin/hyperf.php migrate
-   ```
 
-6. (Opcional) Para processar saques agendados, execute o comando:
+(Opcional) Para processar saques agendados, execute o comando:
    ```bash
-   docker exec php_technical_case_tecnofit-app-1 php bin/hyperf.php app:process-withdrawals
+   docker-compose exec app php bin/hyperf.php app:process-withdrawals
    ```
 
 ## Acesso aos serviços
