@@ -24,6 +24,15 @@ class AccountWithdraw
         bool $scheduled,
         ?string $scheduledFor = null
     ) {
+        if ($scheduled && $scheduledFor) {
+            $scheduledDateTime = new \DateTime($scheduledFor);
+            $now = new \DateTime();
+
+            if ($scheduledDateTime <= $now) {
+                throw new \DomainException("Data de agendamento não pode ser no passado.");
+            }
+        }
+        
         $this->id = $id;
         $this->accountId = $accountId;
         $this->method = $method;

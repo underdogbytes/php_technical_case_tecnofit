@@ -19,6 +19,14 @@ class HyperfAccountRepository implements AccountRepositoryInterface
         return new Account($model->id, $model->name, $model->email, (float)$model->balance);
     }
 
+    public function findByIdForUpdate(string $id): ?Account
+    {
+        $model = AccountModel::where('id', $id)->lockForUpdate()->first();
+        if (!$model) return null;
+
+        return new Account($model->id, $model->name, $model->email, (float)$model->balance);
+    }
+
     public function save(Account $account): void
     {
         AccountModel::updateOrCreate(
